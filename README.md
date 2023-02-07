@@ -1,3 +1,5 @@
 # Run automations backend
 
-### To start the app run `npm start` in the root directory .
+### To get started, run `npm install` to install dependencies .
+
+### To run the project use `npm start` in the root directory .
