@@ -26,6 +26,7 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Routes here
 app.use(userRoutes);

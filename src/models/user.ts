@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { hash } from "bcryptjs";
+import { hash, compare } from "bcryptjs";
 
 interface UserAttributes {
   username: string;
@@ -8,6 +8,7 @@ interface UserAttributes {
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
+  correctPassword(candidatePassword: string, password: any): boolean;
   build(attributes: UserAttributes): UserDoc;
 }
 interface UserDoc extends mongoose.Document {
@@ -64,6 +65,14 @@ userSchema.pre("save", async function (next) {
 userSchema.statics.build = (attributes: UserAttributes) => {
   return new User(attributes);
 };
+
+userSchema.methods.correctPassword = async (
+  candidatePassword: string,
+  password: any
+) => {
+  return await compare(candidatePassword, password);
+};
+
 const User = mongoose.model<UserDoc, UserModel>("User", userSchema);
 
 export { User };

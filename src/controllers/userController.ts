@@ -22,3 +22,19 @@ export const signup = asyncHandler(
     await new AuthToken(newUser, 201, res).send();
   }
 );
+
+export const signin = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    if (!email || !password) {
+      return next(new AppError("Please fill out all fields", 400));
+    }
+    const user = await User.findOne({ email });
+    if (!user || (await User.correctPassword(password, user.password))) {
+      return next(new AppError("Invalid email or password", 400));
+    }
+    await new AuthToken(user, 200, res).send();
+  }
+);
