@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { errorHandler } from "./controllers/errorController";
-import { signupRouter } from "./routes/auth/signup";
+import { userRoutes } from "./routes/auth/userRoutes";
 
 const app = express();
 
@@ -28,7 +28,7 @@ const io = new Server(server, {
 app.use(express.json());
 
 // Routes here
-app.use(signupRouter);
+app.use(userRoutes);
 app.use(errorHandler);
 
 app.use("*", (req: Request, res: Response) => {
