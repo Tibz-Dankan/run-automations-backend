@@ -3,6 +3,8 @@ import { User } from "../models/user";
 import { AppError } from "../utils/error";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AuthToken } from "../utils/token";
+import { Email } from "../utils/email";
+import { createHash } from "crypto";
 
 export const signup = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -35,6 +37,55 @@ export const signin = asyncHandler(
     if (!user || (await User.correctPassword(password, user.password))) {
       return next(new AppError("Invalid email or password", 400));
     }
+    await new AuthToken(user, 200, res).send();
+  }
+);
+
+export const forgotPassword = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.body.email;
+
+    if (!email) return next(new AppError("Please fill out all fields", 400));
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return next(new AppError("There is no user with supplied email", 404));
+    }
+
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+
+    const resetURL = `${req.protocol}://localhost:3000/reset-password/${resetToken}`;
+    const subject = "Reset Password";
+
+    await new Email(email, subject).sendPasswordReset(resetURL, user.username);
+
+    res.status(200).json({
+      status: "success",
+      message: "Password reset token sent to email",
+    });
+  }
+);
+
+export const resetPassword = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.params.token;
+    if (!token) return next(new AppError("Please a reset token", 400));
+    const hashedToken = createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(new AppError("Token is invalid or has expired", 400));
+    }
+    user.password = req.body.password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
     await new AuthToken(user, 200, res).send();
   }
 );

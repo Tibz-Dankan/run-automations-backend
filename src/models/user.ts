@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { hash, compare } from "bcryptjs";
+import { randomBytes, createHash } from "crypto";
 
 interface UserAttributes {
   username: string;
@@ -17,6 +18,7 @@ interface UserDoc extends mongoose.Document {
   password: String;
   createdAt: Date;
   role: String;
+  createPasswordResetToken(): any;
   passwordResetToken: String | undefined;
   passwordResetExpires: Date | undefined;
 }
@@ -66,11 +68,23 @@ userSchema.statics.build = (attributes: UserAttributes) => {
   return new User(attributes);
 };
 
-userSchema.methods.correctPassword = async (
+userSchema.methods.correctPassword = async function (
   candidatePassword: string,
   password: any
-) => {
+) {
   return await compare(candidatePassword, password);
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = randomBytes(32).toString("hex");
+
+  this.set(
+    "passwordResetToken",
+    createHash("sha256").update(resetToken).digest("hex")
+  );
+  this.set("passwordResetExpires", Date.now() + 20 * 60 * 1000);
+
+  return resetToken;
 };
 
 const User = mongoose.model<UserDoc, UserModel>("User", userSchema);

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Tibz-Dankan/run-automations-backend#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
@@ -28,6 +29,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
     "express": "^4.18.2",
     "firebase": "^9.17.1",
     "jsonwebtoken": "^9.0.0",

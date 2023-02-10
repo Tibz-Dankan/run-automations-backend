@@ -1,0 +1,47 @@
+<!-- Email template adapted from https://github.com/leemunroe/responsive-html-email-template -->
+<!DOCTYPE html>
+<html>
+  <%- include('./email-head'); %>
+  <body>
+    <table
+      role="presentation"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      class="body"
+    >
+      <tr>
+        <td>&nbsp;</td>
+        <td class="container">
+          <div class="content">
+            <table role="presentation" class="main">
+              <tr>
+                <td class="wrapper">
+                  <table
+                    role="presentation"
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                  >
+                    <tr>
+                      <td>
+                        <p>Hi Admin,</p>
+                        <p>You have a new message from contact us :</p>
+                        <p>message: <%= message %></p>
+                        <p>from user: <%= name %></p>
+                        <p>Email: <%= email %></p>
+                        <p>Subject: <%= contactSubject %></p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <%- include('./footer'); %>
+          </div>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </body>
+</html>
