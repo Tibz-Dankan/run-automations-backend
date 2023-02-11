@@ -68,7 +68,8 @@ userSchema.statics.build = (attributes: UserAttributes) => {
   return new User(attributes);
 };
 
-userSchema.methods.correctPassword = async function (
+// userSchema.methods.correctPassword = async function (
+userSchema.statics.correctPassword = async function (
   candidatePassword: string,
   password: any
 ) {

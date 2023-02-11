@@ -15,12 +15,12 @@ export class AuthToken {
   signToken(id: string) {
     const jwtSecret: Secret = process.env.JWT_SECRET!;
     return jwt.sign({ id }, jwtSecret, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      expiresIn: process.env.JWT_EXPIRES_IN_HOURS,
     });
   }
 
   constructor(user: any, statusCode: number, res: Response) {
-    const JWT_EXPIRES_IN = parseInt(process.env.JWT_EXPIRES_IN_HOURS!);
+    const JWT_EXPIRES_IN: number = parseInt(process.env.JWT_EXPIRES_IN_HOURS!);
 
     this.user = user;
     this.statusCode = statusCode;
