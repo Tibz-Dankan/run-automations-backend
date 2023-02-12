@@ -34,7 +34,7 @@ export class AuthToken {
   }
 
   async send() {
-    this.res.status(this.statusCode).json({
+    return this.res.status(this.statusCode).json({
       status: "success",
       token: this.token,
       expiresIn: this.expiresIn,
