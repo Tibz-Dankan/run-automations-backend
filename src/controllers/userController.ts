@@ -11,9 +11,13 @@ export const signup = asyncHandler(
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
+    console.log(req.body);
 
     if (!username || !email || !password) {
       return next(new AppError("Please fill out all fields", 400));
+    }
+    if (!email.includes("@")) {
+      return next(new AppError("Please supply a valid email", 400));
     }
     const user = await User.findOne({ email });
     if (user) return next(new AppError("Email already registered", 400));
