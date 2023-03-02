@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppError } from "./error";
 import { asyncHandler } from "./asyncHandler";
-const User = require("../models/user");
+import { User } from "../models/user";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -21,7 +21,10 @@ export const protect = asyncHandler(
     }
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const user = await User.findUserById(decoded.userId);
+    const userId = decoded.id;
+
+    const user = await User.findOne({ userId });
+
     if (!user) {
       return next(
         new AppError("The user belonging to this token no exists!", 403)
