@@ -13,7 +13,7 @@ let mongo: any;
 beforeAll(async () => {
   process.env.JWT_KEY = "somjwttokenhereplease";
 
-  mongo = await MongoMemoryServer.create();
+  mongo = await await MongoMemoryServer.create();
   const uri = mongo.getUri();
   await mongoose.connect(uri);
 });
