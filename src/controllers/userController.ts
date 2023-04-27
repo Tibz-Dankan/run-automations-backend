@@ -38,7 +38,7 @@ export const signin = asyncHandler(
       return next(new AppError("Please fill out all fields", 400));
     }
     const user = await User.findOne({ email });
-    if (!user || (await User.correctPassword(password, user.password))) {
+    if (!user || !(await User.correctPassword(password, user.password))) {
       return next(new AppError("Invalid email or password", 400));
     }
     await new AuthToken(user, 200, res).send();
