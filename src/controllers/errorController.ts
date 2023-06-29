@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { AppError } from "../utils/error";
 
 const handleJWTError = () =>
@@ -29,12 +29,9 @@ const sendErrorProd = (err: any, req: Request, res: Response) => {
 export const errorHandler = (
   err: any,
   req: Request,
-  res: Response
-  //   next: NextFunction
+  res: Response,
+  next: NextFunction
 ) => {
-  // console.log("error stack");
-  // console.log(err.stack);
-
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
